@@ -1,8 +1,7 @@
 import sys
 import os
 import scipy
-from sklearn import datasets
-from sklearn.preprocessing import StandardScaler
+#from sklearn import datasets
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 import numpy as np
@@ -11,7 +10,7 @@ import numpy as np
 dir_path = os.path.dirname(os.path.realpath(__file__))
 sys.path.insert(0, dir_path + "/../utils")
 from data_operation import calculate_covariance_matrix
-from data_manipulation import normalize, standardize
+from data_manipulation import normalize, standardize,load_iris_dataset
 
 
 class MultiClassLDA():
@@ -82,10 +81,11 @@ class MultiClassLDA():
 
 def main():
     # Load the dataset
-    data = datasets.load_iris()
-    X = normalize(data.data)
-    y = data.target
-
+    data=load_iris_dataset(dir_path + r"/../data/iris.csv")
+    X=data['X']
+    y=data['target']
+    X = normalize(X)
+    
     # Project the data onto the 2 primary components
     multi_class_lda = MultiClassLDA()
     multi_class_lda.plot_in_2d(X, y)

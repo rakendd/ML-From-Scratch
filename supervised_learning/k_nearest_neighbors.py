@@ -3,7 +3,7 @@ import os
 import math
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.datasets import load_iris
+#from sklearn.datasets import load_iris
 
 # Import helper functions
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -12,6 +12,7 @@ from data_manipulation import train_test_split, normalize
 from data_operation import euclidean_distance, accuracy_score
 sys.path.insert(0, dir_path + "/../unsupervised_learning/")
 from principal_component_analysis import PCA
+from data_manipulation import load_iris_dataset
 
 
 class KNN():
@@ -60,9 +61,11 @@ class KNN():
 
 
 def main():
-    iris = load_iris()
-    X = normalize(iris.data)
-    y = iris.target
+    data=load_iris_dataset(dir_path + r"/../data/iris.csv")
+    X=data['X']
+    y=data['target']
+    X = normalize(X)
+    
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33)
 
     clf = KNN(k=3)

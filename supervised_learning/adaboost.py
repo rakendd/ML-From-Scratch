@@ -3,9 +3,9 @@ import math
 import sys
 import os
 import numpy as np
-from sklearn.datasets import make_gaussian_quantiles
+#from sklearn.datasets import make_gaussian_quantiles
 import matplotlib.pyplot as plt
-import pandas as pd
+#import pandas as pd
 
 # Import helper functions
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -14,7 +14,7 @@ from data_manipulation import train_test_split
 from data_operation import accuracy_score
 sys.path.insert(0, dir_path + "/../unsupervised_learning/")
 from principal_component_analysis import PCA
-
+from data_manipulation import load_iris_dataset
 
 class Adaboost():
     def __init__(self, n_clf=5):
@@ -107,15 +107,21 @@ class Adaboost():
 
 
 def main():
-    df = pd.read_csv(dir_path + "/../data/iris.csv")
+    data=load_iris_dataset(dir_path + r"/../data/iris.csv")
+    X=data['X']
+    y=data['target']
     # Change class labels from strings to numbers
-    df = df.replace(to_replace="setosa", value="-1")
-    df = df.replace(to_replace="virginica", value="1")
-    df = df.replace(to_replace="versicolor", value="2")
+    # df = df.replace(to_replace="setosa", value="-1")
+    # df = df.replace(to_replace="virginica", value="1")
+    # df = df.replace(to_replace="versicolor", value="2")
 
     # Only select data for two classes
-    X = df.loc[df['species'] != "2"].drop("species", axis=1).as_matrix()
-    y = df.loc[df['species'] != "2"]["species"].as_matrix()
+    #X = df.loc[df['species'] != "2"].drop("species", axis=1).as_matrix()
+    #y = df.loc[df['species'] != "2"]["species"].as_matrix()
+    
+    X = X[y != 2]
+    y = y[y != 2]
+    y[y == 0] = -1
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33)
 
     # Adaboost classification

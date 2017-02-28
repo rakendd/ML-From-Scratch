@@ -2,13 +2,13 @@ import sys
 import os
 import math
 import random
-from sklearn import datasets
+#from sklearn import datasets
 import numpy as np
 
 # Import helper functions
 dir_path = os.path.dirname(os.path.realpath(__file__))
 sys.path.insert(0, dir_path + "/../utils")
-from data_manipulation import normalize
+from data_manipulation import get_spiral_dataset
 from data_operation import euclidean_distance
 sys.path.insert(0, dir_path + "/../unsupervised_learning/")
 from principal_component_analysis import PCA
@@ -102,10 +102,10 @@ class DBSCAN():
 
 def main():
     # Load the dataset
-    X, y = datasets.make_moons(noise=0.05)
+    X, y = get_spiral_dataset(100,2,3) #datasets.make_moons(noise=0.05)
 
     # Cluster the data using DBSCAN
-    clf = DBSCAN(eps=0.3, min_samples=5)
+    clf = DBSCAN(eps=0.3, min_samples=50)
     y_pred = clf.predict(X)
 
     # Project the data onto the 2 primary principal components

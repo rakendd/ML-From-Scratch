@@ -1,15 +1,16 @@
 import sys
 import os
 import math
-from sklearn import datasets
+#from sklearn import datasets
 import numpy as np
-import pandas as pd
+#import pandas as pd
 import matplotlib.pyplot as plt
 
 # Import helper functions
 dir_path = os.path.dirname(os.path.realpath(__file__))
 sys.path.insert(0, dir_path + "/../utils")
 from data_manipulation import make_diagonal, normalize, train_test_split
+from data_manipulation import load_iris_dataset
 from data_operation import accuracy_score
 sys.path.insert(0, dir_path + "/../unsupervised_learning/")
 from principal_component_analysis import PCA
@@ -59,9 +60,12 @@ class LogisticRegression():
 
 def main():
     # Load dataset
-    data = datasets.load_iris()
-    X = normalize(data.data[data.target != 0])
-    y = data.target[data.target != 0]
+    data=load_iris_dataset(dir_path + r"/../data/iris.csv")
+    X=data['X']
+    y=data['target']
+    
+    X = normalize(X[y != 0])
+    y = y[y != 0]
     y[y == 1] = 0
     y[y == 2] = 1
 

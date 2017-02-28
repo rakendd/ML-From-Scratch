@@ -1,45 +1,32 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from sklearn import datasets
+#from sklearn import datasets
 import sys
 import os
-import math
 # Import helper functions
 dir_path = os.path.dirname(os.path.realpath(__file__))
 sys.path.insert(0, dir_path + "/../utils")
 from data_manipulation import k_fold_cross_validation_sets
-from data_manipulation import train_test_split
 from data_operation import mean_squared_error
+from data_manipulation import load_diabetes_dataset
 
 
 class RidgeRegression():
-    def __init__(self, delta, n_iterations=100, learning_rate=0.001, gradient_descent=True):
-        self.w = None                               # Weights
-        self.n_iterations = n_iterations
-        self.learning_rate = learning_rate
-        self.gradient_descent = gradient_descent    # Opt. method. If False => Least squares
-        self.delta = delta                          # Regularization constant
+    def __init__(self, delta):
+        self.w = None           # Weights
+        self.delta = delta      # Regularization constant
 
     def fit(self, X, y):
         # Insert dummy ones for bias weights
         X = np.insert(X, 0, 1, axis=1)
         n_features = np.shape(X)[1]
 
-        # Get weights by gradient descent opt.
-        if self.gradient_descent:
-            # Initial weights randomly [0, 1]
-            self.w = np.random.random((n_features, ))
-            # Do gradient descent for n_iterations
-            for _ in range(self.n_iterations):
-                w_gradient = X.T.dot(X.dot(self.w) - y) + self.delta * self.w
-                self.w -= self.learning_rate * w_gradient
-        # Get weights by least squares (by pseudoinverse)
-        else:
-            U, S, V = np.linalg.svd(
-                X.T.dot(X) + self.delta * np.identity(n_features))
-            S = np.diag(S)
-            X_sq_reg_inv = V.dot(np.linalg.pinv(S)).dot(U.T)
-            self.w = X_sq_reg_inv.dot(X.T).dot(y)
+        # Get weights by least squares with regularization (by pseudoinverse)
+        U, S, V = np.linalg.svd(
+            X.T.dot(X) + self.delta * np.identity(n_features))
+        S = np.diag(S)
+        X_sq_reg_inv = V.dot(np.linalg.pinv(S)).dot(U.T)
+        self.w = X_sq_reg_inv.dot(X.T).dot(y)
 
     def predict(self, X):
         # Insert constant ones for bias weights
@@ -50,16 +37,25 @@ class RidgeRegression():
 
 def main():
     # Load the diabetes dataset
-    X, y = datasets.make_regression(n_features=1, n_samples=100, bias=3, noise=10)
+    diabetes = load_diabetes_dataset(dir_path + r"/../data/diabetes.csv")
+    X=diabetes['X']
+    y=diabetes['target']
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.4)
+    # Use only one feature
+    X = np.expand_dims(X[:, 2], 1)
+
+    # Split the data into training/testing sets
+    X_train, X_test = np.array(X[:-20]), np.array(X[-20:])
+
+    # Split the targets into training/testing sets
+    y_train, y_test = np.array(y[:-20]), np.array(y[-20:])
 
     # Finding regularization constant using cross validation
     lowest_error = float("inf")
     best_reg_factor = None
     print "Finding regularization constant using cross validation:"
     k = 10
-    for regularization_factor in np.arange(0, 0.3, 0.001):
+    for regularization_factor in np.arange(0, 0.5, 0.0001):
         cross_validation_sets = k_fold_cross_validation_sets(
             X_train, y_train, k=k)
         mse = 0

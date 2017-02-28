@@ -1,6 +1,6 @@
 import sys
 import os
-from sklearn import datasets
+#from sklearn import datasets
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 import numpy as np
@@ -8,7 +8,7 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 sys.path.insert(0, dir_path + "/../utils")
 from data_operation import calculate_covariance_matrix
 from data_operation import calculate_correlation_matrix
-from data_manipulation import standardize
+from data_manipulation import load_iris_dataset
 
 
 class PCA():
@@ -62,14 +62,14 @@ class PCA():
 
 def main():
     # Load the dataset
-    data = datasets.load_digits()
-    X = data.data
-    y = data.target
-
+    data=load_iris_dataset(dir_path + r"/../data/iris.csv")
+    X=data['X']
+    y=data['target']
     # Project the data onto the 2 primary principal components and plot the
     # data
     pca = PCA()
     pca.plot_in_2d(X, y)
+    
 
 if __name__ == "__main__":
     main()

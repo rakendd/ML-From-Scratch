@@ -2,13 +2,13 @@ import sys
 import os
 import math
 import random
-from sklearn import datasets
+#from sklearn import datasets
 import numpy as np
 
 # Import helper functions
 dir_path = os.path.dirname(os.path.realpath(__file__))
 sys.path.insert(0, dir_path + "/../utils")
-from data_manipulation import normalize
+from data_manipulation import load_iris_dataset
 from data_operation import euclidean_distance
 sys.path.insert(0, dir_path + "/../unsupervised_learning/")
 from principal_component_analysis import PCA
@@ -123,7 +123,9 @@ class PAM():
 
 def main():
     # Load the dataset
-    X, y = datasets.make_blobs()
+    data=load_iris_dataset(dir_path + r"/../data/iris.csv")
+    X=data['X']
+    y=data['target']
 
     # Cluster the data using K-Medoids
     clf = PAM(k=3)

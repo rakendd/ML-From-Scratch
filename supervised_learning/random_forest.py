@@ -1,13 +1,13 @@
 from __future__ import division
 import numpy as np
-from sklearn import datasets
+#from sklearn import datasets
 import sys
 import os
 import math
 # Import helper functions
 dir_path = os.path.dirname(os.path.realpath(__file__))
 sys.path.insert(0, dir_path + "/../utils")
-from data_manipulation import divide_on_feature, train_test_split, get_random_subsets, normalize
+from data_manipulation import divide_on_feature, train_test_split, get_random_subsets, normalize,load_iris_dataset
 from data_operation import accuracy_score, calculate_entropy
 sys.path.insert(0, dir_path + "/../unsupervised_learning/")
 from principal_component_analysis import PCA
@@ -89,9 +89,9 @@ class RandomForest():
 
 
 def main():
-    data = datasets.load_digits()
-    X = data.data
-    y = data.target
+    data=load_iris_dataset(dir_path + r"/../data/iris.csv")
+    X=data['X']
+    y=data['target']
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.4)
 

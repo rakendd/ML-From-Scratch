@@ -1,15 +1,15 @@
 from __future__ import division
-from sklearn import datasets
+#from sklearn import datasets
 import matplotlib.pyplot as plt
 import math
 import sys
 import os
 import numpy as np
-import pandas as pd
+#import pandas as pd
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 sys.path.insert(0, dir_path + "/../utils")
-from data_manipulation import train_test_split, normalize
+from data_manipulation import train_test_split, normalize,load_iris_dataset
 from data_operation import accuracy_score
 sys.path.insert(0, dir_path + "/../unsupervised_learning/")
 from principal_component_analysis import PCA
@@ -100,10 +100,12 @@ class NaiveBayes():
 
 
 def main():
-    iris = datasets.load_iris()
-    X = normalize(iris.data)
-    y = iris.target
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5)
+    data=load_iris_dataset(dir_path + r"/../data/iris.csv")
+    X=data['X']
+    y=data['target']
+    X = normalize(X)
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
 
     clf = NaiveBayes()
     clf.fit(X_train, y_train)
@@ -114,6 +116,7 @@ def main():
     # Reduce dimension to two using PCA and plot the results
     pca = PCA()
     pca.plot_in_2d(X_test, y_pred)
+    
 
 if __name__ == "__main__":
     main()

@@ -147,3 +147,69 @@ def make_diagonal(x):
         m[i, i] = x[i]
 
     return m
+
+def get_spiral_dataset(N,D,K):
+    """
+    Generates a spiral dataset
+    
+    # N  number of points per class
+    # D  dimensionality
+    # K  number of classes
+
+    Example:
+    X,y= get_spiral_dataset(100,2,3)
+    
+    """
+    X = np.zeros((N*K,D)) # data matrix (each row = single example)
+    y = np.zeros(N*K, dtype='uint8') # class labels
+    for j in xrange(K):
+        ix = range(N*j,N*(j+1))
+        r = np.linspace(0.0,1,N) # radius
+        t = np.linspace(j*4,(j+1)*4,N) + np.random.randn(N)*0.2 # theta
+        X[ix] = np.c_[r*np.sin(t), r*np.cos(t)]
+        y[ix] = j
+    return X,y
+
+def load_iris_dataset(fname):
+    """
+    Loads the supplied iris data set as numpy array
+    """
+    header=open(fname).readline()
+    header=header.strip().split(',')
+    data=np.genfromtxt(fname,skip_header=1,dtype=None,delimiter=',')
+    X=np.c_[data['f0'],data['f1'],data['f2'],data['f3']]
+    target_names=data['f4']
+    target=data['f4'].copy()
+    classes=np.unique(target)
+    data={}
+    for i,item in enumerate(classes):
+        target[target == item] = i
+    data['X']=X
+    data['target']=target.astype(int)
+    data['target_names']=target_names
+    data['classes']=classes
+    data['header']=header
+    return data
+    
+
+def load_diabetes_dataset(fname):
+    """
+    Loads the supplied iris data set as numpy array
+    """
+    header=open(fname).readline()
+    header=header.strip().split(',')
+    data=np.genfromtxt(fname,skip_header=1,delimiter=',')
+    X=data[:,:-1]
+    target=data[:,-1].astype(int)
+    classes=np.unique(target)
+    data={}
+    for i,item in enumerate(classes):
+        target[target == item] = i
+    data['X']=X
+    data['target']=target.astype(int)
+    data['classes']=classes
+    data['header']=header
+    return data
+
+    
+    
