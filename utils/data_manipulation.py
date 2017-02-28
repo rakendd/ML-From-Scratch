@@ -194,7 +194,7 @@ def load_iris_dataset(fname):
 
 def load_diabetes_dataset(fname):
     """
-    Loads the supplied iris data set as numpy array
+    Loads the supplied diabetes data set as numpy array
     """
     header=open(fname).readline()
     header=header.strip().split(',')
